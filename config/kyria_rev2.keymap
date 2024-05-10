@@ -6,113 +6,41 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/keys.h>
 
-#define DEFAULT 0
-#define NUMBERS 1
-#define NAVI 2
-#define SYMBOLS 3
-#define FUNCTIONS 4
-
-&caps_word {
-    continue-list = <UNDERSCORE MINUS>;
-};
-
 / {
+    keymap {
+        compatible = "zmk,keymap";
 
-// TODO: Layer stuff is still a little funky. Either need to change or get used to it
-// TODO: Encoders work as buttons but not as encoders. Check code on this
+        default_layer {
+// ---------------------------------------------------------------------------------------------------------------------------------
+// |  ESC  |  Q  |  W  |  E   |  R   |  T   |                                          |  Y   |  U    |  I    |  O   |   P   |   \  |
+// |  TAB  |  A  |  S  |  D   |  F   |  G   |                                          |  H   |  J    |  K    |  L   |   ;   |   '  |
+// | SHIFT |  Z  |  X  |  C   |  V   |  B   | L SHIFT | L SHIFT |  | LAYER 1 | L SHIFT |  N   |  M    |  ,    |  .   |   /   | CTRL |
+//                     | GUI  | DEL  | RET  |  SPACE  |   ESC   |  |   RET   |  SPACE  | TAB  | BSPC  | R-ALT |
+            bindings = <
+    &kp ESC   &kp Q &kp W &kp E &kp R &kp T                                                &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSLH
+    &kp TAB   &kp A &kp S &kp D &kp F &kp G                                                &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
+    &kp LSHFT &kp Z &kp X &kp C &kp V &kp B &kp LSHFT &kp LSHFT        &mo 1    &kp LSHFT  &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RCTRL
+                     &kp LGUI &kp DEL &kp RET &kp SPACE &kp ESC        &kp RET  &kp SPACE  &kp TAB &kp BSPC &kp RALT
+            >;
 
-    behaviors {
-        ht_nav_num: hold_tap_numbers {
-            compatible = "zmk,behavior-tap-dance";
-            label = "HOLD_TAP_NAVI_NUMBERS";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&mo NAVI>, <&mo NUMBERS>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
-		
-		ht_sym_func: hold_tap_navi {
-            compatible = "zmk,behavior-tap-dance";
-            label = "HOLD_TAP_SYMBOL_FUNCTION";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&mo SYMBOLS>, <&mo FUNCTIONS>;
+        function_layer {
+// ---------------------------------------------------------------------------------------------------------------------------------
+// |       |      |BT_CLR|BTSEL0|BTSEL1|BTSEL2|                                         |      |      |      |      |      |      |
+// |       |      |      |BTSEL3|BTSEL4|      |                                         |      |      |      |      |      |      |
+// |       |      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |
+//                       |      |      |      |      |      |      |      |      |      |      |      |      |
+            bindings = <
+    &trans &trans &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2              &trans &trans &trans &trans &trans &trans
+    &trans &trans &trans     &bt BT_SEL 3 &bt BT_SEL 4 &trans                    &trans &trans &trans &trans &trans &trans
+    &trans &trans &trans &trans &trans &trans &trans &trans        &trans &trans &trans &trans &trans &trans &trans &trans
+                         &trans &trans &trans &trans &trans        &trans &trans &trans &trans &trans
+            >;
+
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
-	
-	combos {
-        compatible = "zmk,combos";
-        combo_caps_word {
-            timeout-ms = <100>;
-            key-positions = <12 23>;
-            bindings = <&caps_word>;
-        };
-		
-	};
-
-	keymap {
-		compatible = "zmk,keymap";
-		
-//	0	1	2	3	4	5						6	7	8	9	10	11
-//	12	13	14	15	16	17						18	19	20	21	22	23
-//	24	25	26	27	28	29	30	31		32	33	34	35	36	37	38	39
-//				40	41	42	43	44		45	46	47	48	49
-
-		default_layer {
-			bindings = <
-	&kp TAB        &kp Q &kp W &kp E    &kp R     &kp T                                                          &kp Y     &kp U     &kp I      &kp O   &kp P    &mt SEMI EQUAL
-	&mt LSHFT LPAR &kp A &kp S &kp D    &kp F     &kp G                                                          &kp H     &kp J     &kp K      &kp L   &kp APOS &mt RSHFT RPAR
-	&mt LCTRL LBKT &kp Z &kp X &kp C    &kp V     &kp B    &mt LALT ESC &none         &kp LGUI     &mt RALT BSLH &kp N     &kp M     &kp COMMA  &kp DOT &kp FSLH &mt RCTRL RBKT
-	                           &kp CAPS &kp GRAVE &kp BSPC &kp DEL      &ht_nav_num   &ht_sym_func &kp RET       &kp SPACE &kp MINUS &kp KP_NUM
-			>;
-
-			sensor-bindings = <&inc_dec_kp RIGHT LEFT &inc_dec_kp PG_DN PG_UP>;
-		};
-		
-		numbers_layer {
-			bindings = <
-	&kp F11 &kp F1 &kp F2  &kp F3  &kp F4  &trans                                      &kp ASTRK &kp N7 &kp N8 &kp N9 &kp EQUAL &trans
-	&trans  &kp F5 &kp F6  &kp F7  &kp F8  &trans                                      &kp PLUS  &kp N4 &kp N5 &kp N6 &kp DOT   &trans
-	&trans  &kp F9 &kp F10 &kp F11 &kp F12 &trans &trans &to DEFAULT   &kp LGUI &trans &kp N0    &kp N1 &kp N2 &kp N3 &trans    &trans
-	                       &trans  &trans  &trans &trans &trans        &trans   &trans &trans    &trans &trans
-			>;
-
-			sensor-bindings = <&inc_dec_kp RIGHT LEFT &inc_dec_kp PG_DN PG_UP>;
-		};
-
-		navigation_layer {
-			bindings = <
-	&trans &trans    &trans     &trans      &trans &trans                                      &trans &kp HOME &kp PG_DN &kp PG_UP &kp END   &trans
-	&trans &trans    &trans     &trans      &trans &trans                                      &trans &kp LEFT &kp DOWN  &kp UP    &kp RIGHT &trans
-	&trans &kp K_CUT &kp K_COPY &kp K_PASTE &trans &trans &trans &to DEFAULT   &kp LGUI &trans &trans &trans   &trans    &trans    &trans    &trans
-	                            &trans      &trans &trans &trans &trans        &trans   &trans &trans &trans   &trans
-			>;
-
-			sensor-bindings = <&inc_dec_kp RIGHT LEFT &inc_dec_kp PG_DN PG_UP>;
-		};
-	
-		symbols_layer {
-			bindings = <
-	&trans &kp CARET &kp AT    &kp HASH &kp DLLR &kp PRCNT                                      &trans &trans &trans &trans &trans &trans
-	&trans &kp ASTRK &kp EQUAL &kp LBRC &kp RBRC &kp AMPS                                       &trans &trans &trans &trans &trans &trans
-	&trans &kp EXCL  &kp PIPE  &kp LT   &kp GT   &kp MINUS &trans &to DEFAULT   &kp LGUI &trans &trans &trans &trans &trans &trans &trans
-	                           &trans   &trans   &trans    &trans &trans        &trans   &trans &trans &trans &trans
-			>;
-
-			sensor-bindings = <&inc_dec_kp RIGHT LEFT &inc_dec_kp PG_DN PG_UP>;
-		};
-		
-		functions_layer {
-			bindings = <
-	&none &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4                              &none         &none &none &none &none &bt BT_CLR
-	&none &none        &none        &none        &none        &none                                     &none &none &none &none &none &none
-	&none &none        &out OUT_USB &none        &out OUT_BLE &none        &none  &none    &none  &none &none         &none &none &none &none &pass_macro
-	                                &none        &none        &none        &none  &trans   &trans &none &none         &none &none
-			>;
-
-			sensor-bindings = <&inc_dec_kp RIGHT LEFT &inc_dec_kp PG_DN PG_UP>;
-		};
-
-	};
+    };
 };
