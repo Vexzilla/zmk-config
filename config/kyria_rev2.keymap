@@ -36,16 +36,16 @@
 				tapping-term-ms = <200>;
 				bindings = <&mo SYMBOLS>, <&mo FUNCTIONS>;
 			};
+	};
 		
-		combos {
-			compatible = "zmk,combos";
-			combo_caps_word {
-				timeout-ms = <100>;
-				key-positions = <12 23>;
-				bindings = <&caps_word>;
-			};
-			
+	combos {
+		compatible = "zmk,combos";
+		combo_caps_word {
+			timeout-ms = <100>;
+			key-positions = <12 23>;
+			bindings = <&caps_word>;
 		};
+	};
 
     keymap {
         compatible = "zmk,keymap";
